@@ -40,6 +40,38 @@
 
 // Shared object styles
 @import 'richie-education/scss/objects/index';
+@import 'richie-education/scss/objects/banner.scss';
+@import 'richie-education/scss/objects/breadcrumbs';
+@import 'richie-education/scss/objects/course_glimpses';
+@import 'richie-education/scss/objects/blogpost_glimpses';
+@import 'richie-education/scss/objects/organization_glimpses';
+@import 'richie-education/scss/objects/person_glimpses';
+@import 'richie-education/scss/objects/category_glimpses';
+@import 'richie-education/scss/objects/program_glimpses';
+@import 'richie-education/scss/objects/pagination';
+@import 'richie-education/scss/objects/social-networks';
+@import 'richie-education/scss/objects/buttons';
+@import 'richie-education/scss/objects/characteristics';
+@import 'richie-education/scss/objects/react-autosuggest';
+@import 'richie-education/scss/objects/search-filter-value';
+@import 'richie-education/scss/objects/selector';
+@import 'richie-education/scss/objects/form';
+@import 'richie-education/js/components/CourseRunEnrollment/styles';
+@import 'richie-education/js/components/LtiConsumer/styles';
+@import 'richie-education/js/components/Modal/styles';
+@import 'richie-education/js/components/SearchFilterGroup/styles';
+@import 'richie-education/js/components/SearchFilterGroupModal/styles';
+@import 'richie-education/js/components/SearchFiltersPane/styles';
+@import 'richie-education/js/components/SearchInput/styles';
+@import 'richie-education/js/components/Spinner/styles';
+@import 'richie-education/js/components/UserLogin/styles';
+@import 'richie-education/js/components/UserMenu/styles';
+@import 'richie-education/scss/components/templates/courses/plugins/category_plugin';
+@import 'richie-education/scss/components/templates/courses/plugins/licence_plugin';
+@import 'richie-education/scss/components/templates/richie/section/section';
+@import './components/templates/richie/large_banner/large_banner';
+@import 'richie-education/scss/components/templates/richie/nesteditem/nesteditem';
+@import 'richie-education/scss/components/templates/richie/glimpse/glimpse';
 
 // Page component styles
 @import 'richie-education/scss/components/index';
@@ -47,6 +79,7 @@
 @import 'richie-education/js/components/AddressesManagement/styles';
 
 // Page component overrides
+@import './components/header';
 @import './components/subheader';
 @import './components/templates/courses/cms/homepage';
 @import './components/templates/richie/large_banner/large_banner';

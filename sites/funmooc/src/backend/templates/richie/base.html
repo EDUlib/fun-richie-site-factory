@@ -1,5 +1,5 @@
 {% extends "richie/base.html" %}
-{% load cms_tags static i18n %}
+{% load static i18n %}
 
 {% block meta_favicons %}
 <link rel="apple-touch-icon" sizes="180x180" href="{% static 'richie/favicon/apple-touch-icon.png' %}">
@@ -13,24 +13,31 @@
 <meta name="theme-color" content="#ffffff">
 {% endblock meta_favicons %}
 
-{% block topbar_contact %}
-<li class="topbar__item topbar__item--cta">
-    <a href="{% page_url 'help' %}">{% trans "FAQ" %}</a>
+{% block userlogin %}
+<li class="topbar__item topbar__item--register">
+    <a href="https://cours.edulib.org/register">{% trans "Sign up" %}</a>
 </li>
-{% endblock topbar_contact %}
+<li class="topbar__item topbar__item--login">
+    <a href="https://cours.edulib.org/login">{% trans "Login" %}</a>
+</li>
+{% endblock userlogin %}
 
-{% block branding_topbar %}
-    {% get_current_language as LANGUAGE_CODE %}
-    <img src="{% get_static_prefix %}richie/images/logo-{{LANGUAGE_CODE}}.svg" class="topbar__logo" alt="{{ SITE.name }}">
-{% endblock branding_topbar %}
+{% block topbar_contact %}{% endblock topbar_contact %}
 
 {% block body_footer_title %}{% endblock body_footer_title %}
 
-{% block body_js %}{% endblock body_js %}
+{% block body_mentions %}
+<div class="body-mentions__copyright">
+    <p>{% now "Y" %} &copy; EDUlib {% trans "All Rights Reserved." %}</p>
+</div>
+<div class="body-mentions__poweredby">
+    <p>
+        <small>{% trans "Powered by" %}</small>
+        <a class="body-footer__poweredby__link" href="https://github.com/openfun/richie"><strong>Richie</strong></a>
+        &
+        <a class="body-footer__poweredby__link" href="https://open.edx.org/"><strong>open edX</strong></a>
+    </p>
+</div>
+{% endblock body_mentions %}
 
-{% block body_footer_brand %}
-{# Change the link to point to our institutional site #}
-<a href="{% trans "https://www.france-universite-numerique.fr/en/" %}">
-    <img src="{% static "richie/images/logo-alt.png" %}" alt="">
-</a>
-{% endblock body_footer_brand %}
+{% block body_js %}{% endblock body_js %}
