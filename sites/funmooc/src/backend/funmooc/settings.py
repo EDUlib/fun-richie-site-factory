@@ -20,10 +20,8 @@ DATA_DIR = os.path.join("/", "data")
 
 def get_release():
     """Get the current release of the application.
-
     By release, we mean the release from the version.json file à la Mozilla [1]
     (if any). If this file has not been found, it defaults to "NA".
-
     [1]
     https://github.com/mozilla-services/Dockerflow/blob/master/docs/version_object.md
     """
@@ -39,7 +37,6 @@ def get_release():
 class StyleguideMixin:
     """
     Theme styleguide reference
-
     Only used to build styleguide page without the need to hardcode properties
     and values into styleguide template.
     """
@@ -50,24 +47,23 @@ class StyleguideMixin:
         # Named color palette
         "palette": [
             "black",
-            "black-two",
-            "dark",
-            "brownish-grey",
+            "dark-grey",
+            "charcoal",
+            "slate-grey",
             "battleship-grey",
-            "purplish-grey",
             "light-grey",
             "silver",
-            "pale-grey",
-            "white-three",
+            "azure2",
+            "smoke",
             "white",
-            "navy-blue",
-            "darkish-blue",
-            "ocean-blue",
-            "turquoise-blue",
-            "robin-egg-blue",
-            "mediumturquoise",
-            "lipstick",
+            "denim",
+            "firebrick6",
+            "purplish-grey",
+            "grey32",
+            "grey59",
+            "grey87",
             "indianred3",
+            "midnightblue",
         ],
         # Available gradient background
         "gradient_colors": [
@@ -121,14 +117,10 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
     This is the base configuration every configuration (aka environnement) should inherit from. It
     is recommended to configure third-party applications by creating a configuration mixins in
     ./configurations and compose the Base configuration with those mixins.
-
     It depends on an environment variable that SHOULD be defined:
-
     * DJANGO_SECRET_KEY
-
     You may also want to override default configuration by setting the following environment
     variables:
-
     * DJANGO_SENTRY_DSN
     * RICHIE_ES_HOST
     * DB_NAME
@@ -239,31 +231,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
 
     # LMS
     RICHIE_LMS_BACKENDS = [
-        {
-            "BACKEND": values.Value(
-                "richie.apps.courses.lms.edx.EdXLMSBackend",
-                environ_name="EDX_BACKEND",
-                environ_prefix=None,
-            ),
-            "JS_BACKEND": values.Value(
-                "openedx-dogwood",
-                environ_name="EDX_JS_BACKEND",
-                environ_prefix=None,
-            ),
-            "COURSE_REGEX": values.Value(
-                r"^.*/courses/(?P<course_id>.*)/info/?$",
-                environ_name="EDX_COURSE_REGEX",
-                environ_prefix=None,
-            ),
-            # Synchronization
-            "COURSE_RUN_SYNC_NO_UPDATE_FIELDS": ["languages"],
-            "JS_COURSE_REGEX": values.Value(
-                r"^.*/courses/(.*)/info/?$",
-                environ_name="EDX_JS_COURSE_REGEX",
-                environ_prefix=None,
-            ),
-            "BASE_URL": values.Value(environ_name="EDX_BASE_URL", environ_prefix=None),
-        }
     ]
     RICHIE_COURSE_RUN_SYNC_SECRETS = values.ListValue([])
 
@@ -392,19 +359,309 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
         "django.contrib.humanize",
     )
 
-    # Search
-    RICHIE_FILTERS_CONFIGURATION = [
-        (
-            "richie.apps.search.filter_definitions.StaticChoicesFilterDefinition",
-            {
-                "fragment_map": {"new": [{"term": {"is_new": True}}]},
-                "human_name": _("New courses"),
-                "min_doc_count": 0,
-                "name": "new",
-                "position": 0,
-                "values": {"new": _("New courses")},
+    #Plugin restrictions
+    CMS_PLACEHOLDER_CONF = {
+        # -- Static Placeholders
+        # Footer
+        "footer": {
+            "name": _("Footer"),
+            "plugins": ["NestedItemPlugin", "LinkPlugin"],
+            "NestedItemPlugin": ["LinkPlugin"],
+        },
+        "static_blogpost_headline": {
+            "name": _("Static headline"),
+            "plugins": ["SectionPlugin", "CKEditorPlugin"],
+            "child_classes": {"SectionPlugin": ["CKEditorPlugin"]},
+        },
+        # -- Page Placeholders
+        # Homepage
+        "richie/homepage.html maincontent": {
+            "name": _("Main content"),
+            "plugins": ["LargeBannerPlugin", "SectionPlugin"],
+            "child_classes": {
+                "SectionPlugin": [
+                    "BlogPostPlugin",
+                    "CategoryPlugin",
+                    "CoursePlugin",
+                    "CKEditorPlugin",
+                    "GlimpsePlugin",
+                    "LinkPlugin",
+                    "NestedItemPlugin",
+                    "OrganizationsByCategoryPlugin",
+                    "OrganizationPlugin",
+                    "PersonPlugin",
+                    "ProgramPlugin",
+                    "SectionPlugin",
+                ],
+                "NestedItemPlugin": ["CategoryPlugin"],
             },
-        ),
+        },
+        # Single column page
+        "richie/single_column.html maincontent": {
+            "name": _("Main content"),
+            "excluded_plugins": ["CKEditorPlugin", "GoogleMapPlugin"],
+            "parent_classes": {
+                "BlogPostPlugin": ["SectionPlugin"],
+                "CategoryPlugin": ["SectionPlugin"],
+                "CoursePlugin": ["SectionPlugin"],
+                "GlimpsePlugin": ["SectionPlugin"],
+                "OrganizationPlugin": ["SectionPlugin"],
+                "OrganizationsByCategoryPlugin": ["SectionPlugin"],
+                "PersonPlugin": ["SectionPlugin"],
+                "ProgramPlugin": ["SectionPlugin"],
+            },
+            "child_classes": {
+                "SectionPlugin": [
+                    "BlogPostPlugin",
+                    "CategoryPlugin",
+                    "CoursePlugin",
+                    "GlimpsePlugin",
+                    "LinkPlugin",
+                    "NestedItemPlugin",
+                    "OrganizationsByCategoryPlugin",
+                    "OrganizationPlugin",
+                    "PersonPlugin",
+                    "ProgramPlugin",
+                ],
+                "NestedItemPlugin": ["NestedItemPlugin", "LinkPlugin"],
+            },
+        },
+        # Course detail
+        "courses/cms/course_detail.html course_cover": {
+            "name": _("Cover"),
+            "plugins": ["SimplePicturePlugin"],
+            "limits": {"SimplePicturePlugin": 1},
+        },
+        "courses/cms/course_detail.html course_introduction": {
+            "name": _("Catch phrase"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        "courses/cms/course_detail.html course_teaser": {
+            "name": _("Teaser"),
+            "plugins": ["VideoPlayerPlugin", "SimplePicturePlugin"],
+            "limits": {"VideoPlayerPlugin": 1, "SimplePicturePlugin": 1},
+        },
+        "courses/cms/course_detail.html course_description": {
+            "name": _("About the course"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        "courses/cms/course_detail.html course_skills": {
+            "name": _("What you will learn"),
+            "plugins": ["CKEditorPlugin"],
+        },
+        "courses/cms/course_detail.html course_format": {
+            "name": _("Format"),
+            "plugins": ["CKEditorPlugin"],
+        },
+        "courses/cms/course_detail.html course_prerequisites": {
+            "name": _("Prerequisites"),
+            "plugins": ["CKEditorPlugin"],
+        },
+        "courses/cms/course_detail.html course_team": {
+            "name": _("Team"),
+            "plugins": ["PersonPlugin"],
+        },
+        "courses/cms/course_detail.html course_plan": {
+            "name": _("Plan"),
+            "plugins": ["NestedItemPlugin"],
+            "child_classes": {"NestedItemPlugin": ["NestedItemPlugin"]},
+        },
+        "courses/cms/course_detail.html course_information": {
+            "name": _("Complementary information"),
+            "plugins": ["SectionPlugin"],
+            "parent_classes": {
+                "CKEditorPlugin": ["SectionPlugin"],
+                "SimplePicturePlugin": ["SectionPlugin"],
+                "GlimpsePlugin": ["SectionPlugin"],
+                "NestedItemPlugin":["SectionPlugin"],
+            },
+            "child_classes": {
+                "SectionPlugin": ["CKEditorPlugin", "SimplePicturePlugin", "GlimpsePlugin","NestedItemPlugin"]
+            },
+        },
+        "courses/cms/course_detail.html course_more_information": {
+            "name": _("Complementary information"),
+            "plugins": ["SectionPlugin"],
+            "parent_classes": {
+                "CKEditorPlugin": ["SectionPlugin"],
+                "SimplePicturePlugin": ["SectionPlugin"],
+                "GlimpsePlugin": ["SectionPlugin"],
+                "NestedItemPlugin":["SectionPlugin"],
+            },
+            "child_classes": {
+                "SectionPlugin": ["CKEditorPlugin", "SimplePicturePlugin", "GlimpsePlugin","NestedItemPlugin"]
+            },
+        },
+        "courses/cms/course_detail.html course_license_content": {
+            "name": _("License for the course content"),
+            "plugins": ["LicencePlugin"],
+            "limits": {"LicencePlugin": 1},
+        },
+        "courses/cms/course_detail.html course_license_participation": {
+            "name": _("License for the content created by course participants"),
+            "plugins": ["LicencePlugin"],
+            "limits": {"LicencePlugin": 1},
+        },
+        "courses/cms/course_detail.html course_categories": {
+            "name": _("Categories"),
+            "plugins": ["CategoryPlugin"],
+        },
+        "courses/cms/course_detail.html course_icons": {
+            "name": _("Icon"),
+            "plugins": ["CategoryPlugin"],
+            "limits": {"CategoryPlugin": 1},
+        },
+        "courses/cms/course_detail.html course_organizations": {
+            "name": _("Organizations"),
+            "plugins": ["OrganizationPlugin"],
+        },
+        "courses/cms/course_detail.html course_assessment": {
+            "name": _("Assessment and Certification"),
+            "plugins": ["CKEditorPlugin"],
+        },
+        # Organization detail
+        "courses/cms/organization_detail.html banner": {
+            "name": _("Banner"),
+            "plugins": ["SimplePicturePlugin"],
+            "limits": {"SimplePicturePlugin": 1},
+        },
+        "courses/cms/organization_detail.html logo": {
+            "name": _("Logo"),
+            "plugins": ["SimplePicturePlugin"],
+            "limits": {"SimplePicturePlugin": 1},
+        },
+        "courses/cms/organization_detail.html categories": {
+            "name": _("Categories"),
+            "plugins": ["CategoryPlugin"],
+        },
+        "courses/cms/organization_detail.html description": {
+            "name": _("Description"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        # Category detail
+        "courses/cms/category_detail.html banner": {
+            "name": _("Banner"),
+            "plugins": ["SimplePicturePlugin"],
+            "limits": {"SimplePicturePlugin": 1},
+        },
+        "courses/cms/category_detail.html logo": {
+            "name": _("Logo"),
+            "plugins": ["SimplePicturePlugin"],
+            "limits": {"SimplePicturePlugin": 1},
+        },
+        "courses/cms/category_detail.html icon": {
+            "name": _("Icon"),
+            "plugins": ["SimplePicturePlugin"],
+            "limits": {"SimplePicturePlugin": 1},
+        },
+        "courses/cms/category_detail.html description": {
+            "name": _("Description"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        # Person detail
+        "courses/cms/person_detail.html categories": {
+            "name": _("Categories"),
+            "plugins": ["CategoryPlugin"],
+        },
+        "courses/cms/person_detail.html portrait": {
+            "name": _("Portrait"),
+            "plugins": ["SimplePicturePlugin"],
+            "limits": {"SimplePicturePlugin": 1},
+        },
+        "courses/cms/person_detail.html bio": {
+            "name": _("Bio"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        "courses/cms/person_detail.html maincontent": {
+            "name": _("Main Content"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        "courses/cms/person_detail.html organizations": {
+            "name": _("Organizations"),
+            "plugins": ["OrganizationPlugin"],
+        },
+        # Blog page detail
+        "courses/cms/blogpost_detail.html author": {
+            "name": _("Author"),
+            "plugins": ["PersonPlugin"],
+            "limits": {"PersonPlugin": 1},
+        },
+        "courses/cms/blogpost_detail.html categories": {
+            "name": _("Categories"),
+            "plugins": ["CategoryPlugin"],
+        },
+        "courses/cms/blogpost_detail.html cover": {
+            "name": _("Cover"),
+            "plugins": ["SimplePicturePlugin"],
+            "limits": {"SimplePicturePlugin": 1},
+        },
+        "courses/cms/blogpost_detail.html excerpt": {
+            "name": _("Excerpt"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        "courses/cms/blogpost_detail.html body": {
+            "name": _("Body"),
+            "excluded_plugins": ["CKEditorPlugin", "GoogleMapPlugin"],
+        },
+        "courses/cms/blogpost_detail.html headline": {
+            "name": _("Headline"),
+            "plugins": ["SectionPlugin", "CKEditorPlugin"],
+            "child_classes": {"SectionPlugin": ["CKEditorPlugin"]},
+        },
+        # Program page detail
+        "courses/cms/program_detail.html program_cover": {
+            "name": _("Cover"),
+            "plugins": ["SimplePicturePlugin"],
+            "limits": {"SimplePicturePlugin": 1},
+        },
+        "courses/cms/program_detail.html program_excerpt": {
+            "name": _("Excerpt"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        "courses/cms/program_detail.html program_body": {
+            "name": _("Body"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        "courses/cms/program_detail.html program_courses": {
+            "name": _("Courses"),
+            "plugins": ["CoursePlugin"],
+        },
+        "courses/cms/program_list.html maincontent": {
+            "name": _("Main content"),
+            "plugins": ["SectionPlugin"],
+            "child_classes": {
+                "SectionPlugin": [
+                    "BlogPostPlugin",
+                    "CategoryPlugin",
+                    "CoursePlugin",
+                    "GlimpsePlugin",
+                    "LinkPlugin",
+                    "OrganizationPlugin",
+                    "OrganizationsByCategoryPlugin",
+                    "PersonPlugin",
+                    "CKEditorPlugin",
+                    "SectionPlugin",
+                    "NestedItemPlugin",
+                ],
+                "NestedItemPlugin": ["CategoryPlugin"],
+            },
+        },
+    }
+
+    RICHIE_SIMPLETEXT_CONFIGURATION = [
+    ]
+
+    #Search
+    RICHIE_FILTERS_CONFIGURATION = [
         (
             "richie.apps.search.filter_definitions.NestingWrapper",
             {
@@ -417,7 +674,7 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                             "is_drilldown": True,
                             "min_doc_count": 0,
                             "name": "availability",
-                            "position": 1,
+                            "position": 0,
                         },
                     ),
                     (
@@ -428,24 +685,11 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                             # time. Eg. 200 languages, 190+ of which will have 0 matching courses.
                             "min_doc_count": 1,
                             "name": "languages",
-                            "position": 5,
+                            "position": 3,
                             "sorting": "count",
                         },
                     ),
                 ],
-            },
-        ),
-        (
-            "richie.apps.search.filter_definitions.IndexableHierarchicalFilterDefinition",
-            {
-                "human_name": _("Types"),
-                "is_autocompletable": True,
-                "is_searchable": True,
-                "min_doc_count": 0,
-                "name": "types",
-                "position": 2,
-                "reverse_id": "types",
-                "term": "categories",
             },
         ),
         (
@@ -456,7 +700,7 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                 "is_searchable": True,
                 "min_doc_count": 0,
                 "name": "subjects",
-                "position": 3,
+                "position": 1,
                 "reverse_id": "subjects",
                 "term": "categories",
             },
@@ -464,13 +708,26 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
         (
             "richie.apps.search.filter_definitions.IndexableHierarchicalFilterDefinition",
             {
-                "human_name": _("Collections"),
+                "human_name": _("Host"),
                 "is_autocompletable": True,
                 "is_searchable": True,
                 "min_doc_count": 0,
-                "name": "collections",
+                "name": "host",
                 "position": 4,
-                "reverse_id": "collections",
+                "reverse_id": "host",
+                "term": "categories",
+            },
+        ),
+        (
+            "richie.apps.search.filter_definitions.IndexableHierarchicalFilterDefinition",
+            {
+                "human_name": _("Certificate"),
+                "is_autocompletable": True,
+                "is_searchable": True,
+                "min_doc_count": 0,
+                "name": "certificate",
+                "position": 5,
+                "reverse_id": "certificate",
                 "term": "categories",
             },
         ),
@@ -482,7 +739,7 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                 "is_searchable": True,
                 "min_doc_count": 0,
                 "name": "organizations",
-                "position": 5,
+                "position": 2,
                 "reverse_id": "organizations",
                 "term": "organizations",
             },
@@ -490,7 +747,7 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
         (
             "richie.apps.search.filter_definitions.IndexableFilterDefinition",
             {
-                "human_name": _("Contributors"),
+                "human_name": _("Persons"),
                 "is_autocompletable": True,
                 "is_searchable": True,
                 "min_doc_count": 0,
@@ -606,76 +863,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
     )
     RICHIE_ES_STATE_WEIGHTS = values.ListValue(None)
 
-    # LTI Content
-    RICHIE_LTI_PROVIDERS = {
-        "marsha": {
-            "oauth_consumer_key": values.Value(
-                "InsecureOauthConsumerKey",
-                environ_name="LTI_OAUTH_CONSUMER_KEY",
-                environ_prefix=None,
-            ),
-            "shared_secret": values.Value(
-                "InsecureSharedSecret",
-                environ_name="LTI_SHARED_SECRET",
-                environ_prefix=None,
-            ),
-            "base_url": values.Value(
-                "https://marsha\.education/lti/videos/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",  # noqa
-                environ_name="LTI_BASE_URL",
-                environ_prefix=None,
-            ),
-            "display_name": "Marsha Video",
-            "is_base_url_regex": True,
-            "automatic_resizing": True,
-            "inline_ratio": 0.5625,
-        }
-    }
-
-    # Cache
-    CACHES = values.DictValue(
-        {
-            "default": {
-                "BACKEND": values.Value(
-                    "base.cache.RedisCacheWithFallback",
-                    environ_name="CACHE_DEFAULT_BACKEND",
-                    environ_prefix=None,
-                ),
-                "LOCATION": values.Value(
-                    "mymaster/redis-sentinel:26379,redis-sentinel:26379/0",
-                    environ_name="CACHE_DEFAULT_LOCATION",
-                    environ_prefix=None,
-                ),
-                "OPTIONS": values.DictValue(
-                    {
-                        "CLIENT_CLASS": "richie.apps.core.cache.SentinelClient",
-                    },
-                    environ_name="CACHE_DEFAULT_OPTIONS",
-                    environ_prefix=None,
-                ),
-                "TIMEOUT": values.IntegerValue(
-                    300, environ_name="CACHE_DEFAULT_TIMEOUT", environ_prefix=None
-                ),
-            },
-            "memory_cache": {
-                "BACKEND": values.Value(
-                    "django.core.cache.backends.locmem.LocMemCache",
-                    environ_name="CACHE_FALLBACK_BACKEND",
-                    environ_prefix=None,
-                ),
-                "LOCATION": values.Value(
-                    None,
-                    environ_name="CACHE_FALLBACK_LOCATION",
-                    environ_prefix=None,
-                ),
-                "OPTIONS": values.DictValue(
-                    {},
-                    environ_name="CACHE_FALLBACK_OPTIONS",
-                    environ_prefix=None,
-                ),
-            },
-        }
-    )
-
     # For more details about CMS_CACHE_DURATION, see :
     # http://docs.django-cms.org/en/latest/reference/configuration.html#cms-cache-durations
     CMS_CACHE_DURATIONS = values.DictValue(
@@ -712,7 +899,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
     def RELEASE(self):
         """
         Return the release information.
-
         Delegate to the module function to enable easier testing.
         """
         return get_release()
@@ -753,7 +939,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
 class Development(Base):
     """
     Development environment settings
-
     We set DEBUG to True and configure the server to respond from all hosts.
     """
 
@@ -775,17 +960,14 @@ class Test(Base):
 class ContinuousIntegration(Test):
     """
     Continous Integration environment settings
-
     nota bene: it should inherit from the Test environment.
     """
 
 
 class Production(Base):
     """Production environment settings
-
     You must define the DJANGO_ALLOWED_HOSTS environment variable in Production
     configuration (and derived configurations):
-
     DJANGO_ALLOWED_HOSTS="foo.com,foo.fr"
     """
 
@@ -824,7 +1006,6 @@ class Production(Base):
 class Feature(Production):
     """
     Feature environment settings
-
     nota bene: it should inherit from the Production environment.
     """
 
@@ -834,7 +1015,6 @@ class Feature(Production):
 class Staging(Production):
     """
     Staging environment settings
-
     nota bene: it should inherit from the Production environment.
     """
 
@@ -844,7 +1024,6 @@ class Staging(Production):
 class PreProduction(Production):
     """
     Pre-production environment settings
-
     nota bene: it should inherit from the Production environment.
     """
 
