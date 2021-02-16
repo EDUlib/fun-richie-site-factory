@@ -471,10 +471,15 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                 "CKEditorPlugin": ["SectionPlugin"],
                 "SimplePicturePlugin": ["SectionPlugin"],
                 "GlimpsePlugin": ["SectionPlugin"],
-                "NestedItemPlugin":["SectionPlugin"],
             },
             "child_classes": {
-                "SectionPlugin": ["CKEditorPlugin", "SimplePicturePlugin", "GlimpsePlugin","NestedItemPlugin"]
+                "SectionPlugin": [
+                    "CKEditorPlugin",
+                    "SimplePicturePlugin",
+                    "GlimpsePlugin",
+                    "NestedItemPlugin",
+                ],
+                "NestedItemPlugin": ["NestedItemPlugin", "LinkPlugin"],
             },
         },
         "courses/cms/course_detail.html course_more_information": {
@@ -484,10 +489,15 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                 "CKEditorPlugin": ["SectionPlugin"],
                 "SimplePicturePlugin": ["SectionPlugin"],
                 "GlimpsePlugin": ["SectionPlugin"],
-                "NestedItemPlugin":["SectionPlugin"],
             },
             "child_classes": {
-                "SectionPlugin": ["CKEditorPlugin", "SimplePicturePlugin", "GlimpsePlugin","NestedItemPlugin"]
+                "SectionPlugin": [
+                    "CKEditorPlugin",
+                    "SimplePicturePlugin",
+                    "GlimpsePlugin",
+                    "NestedItemPlugin",
+                ],
+                "NestedItemPlugin": ["NestedItemPlugin", "LinkPlugin"],
             },
         },
         "courses/cms/course_detail.html course_more_information": {
