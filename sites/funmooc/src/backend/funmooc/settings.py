@@ -877,7 +877,7 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
     MAX_BROWSER_CACHE_TTL = 600
 
     # Sessions
-    SESSION_ENGINE = values.Value("django.contrib.sessions.backends.cache")
+    SESSION_ENGINE = values.Value("django.contrib.sessions.backends.db")
 
     # Sentry
     SENTRY_DSN = values.Value(None, environ_name="SENTRY_DSN")
