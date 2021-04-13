@@ -140,7 +140,7 @@ $r-subheader-search-title-width: 19rem !default; // aligned on computed search r
     text-align: center;
 
     @include media-breakpoint-up(lg) {
-      @include sv-flex(1, 0, $r-course-aside);
+      @include sv-flex(1, 0, 40%);
       padding: 3rem 1rem;
     }
   }
@@ -152,10 +152,6 @@ $r-subheader-search-title-width: 19rem !default; // aligned on computed search r
 
     @if r-theme-val(subheader, teaser-border) {
       border: 0.25rem solid r-theme-val(subheader, teaser-border);
-    }
-
-    @include media-breakpoint-up(lg) {
-      @include sv-flex(1, 0, 90%);
     }
 
     iframe,
