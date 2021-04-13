@@ -278,87 +278,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
 
     # Placeholders
     CMS_PLACEHOLDER_CONF_OVERRIDES = {
-        "courses/cms/course_detail.html course_teaser": {
-            "name": _("Teaser"),
-            "plugins": ["LTIConsumerPlugin"],
-            "limits": {"LTIConsumerPlugin": 1},
-        },
-    }
-
-    MIDDLEWARE = (
-        "richie.apps.core.cache.LimitBrowserCacheTTLHeaders",
-        "cms.middleware.utils.ApphookReloadMiddleware",
-        "django.middleware.security.SecurityMiddleware",
-        "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.middleware.csrf.CsrfViewMiddleware",
-        "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "django.contrib.messages.middleware.MessageMiddleware",
-        "django.middleware.locale.LocaleMiddleware",
-        "django.middleware.common.CommonMiddleware",
-        "django.middleware.clickjacking.XFrameOptionsMiddleware",
-        "dockerflow.django.middleware.DockerflowMiddleware",
-        "cms.middleware.user.CurrentUserMiddleware",
-        "cms.middleware.page.CurrentPageMiddleware",
-        "cms.middleware.toolbar.ToolbarMiddleware",
-        "cms.middleware.language.LanguageCookieMiddleware",
-        "dj_pagination.middleware.PaginationMiddleware",
-    )
-
-    INSTALLED_APPS = (
-        # Funmooc stuff
-        "base",
-        # Richie stuff
-        "richie.apps.demo",
-        "richie.apps.search",
-        "richie.apps.courses",
-        "richie.apps.core",
-        "richie.plugins.glimpse",
-        "richie.plugins.html_sitemap",
-        "richie.plugins.large_banner",
-        "richie.plugins.nesteditem",
-        "richie.plugins.lti_consumer",
-        "richie.plugins.plain_text",
-        "richie.plugins.section",
-        "richie.plugins.simple_picture",
-        "richie.plugins.simple_text_ckeditor",
-        "richie",
-        # Third party apps
-        "dj_pagination",
-        "dockerflow.django",
-        "parler",
-        "rest_framework",
-        "storages",
-        # django-autocomplete-light
-        "dal",
-        "dal_select2",
-        # Django-cms
-        "djangocms_admin_style",
-        "djangocms_googlemap",
-        "djangocms_link",
-        "djangocms_picture",
-        "djangocms_text_ckeditor",
-        "djangocms_video",
-        "django_check_seo",
-        "cms",
-        "menus",
-        "sekizai",
-        "treebeard",
-        "filer",
-        "easy_thumbnails",
-        # Django
-        "django.contrib.auth",
-        "django.contrib.contenttypes",
-        "django.contrib.sessions",
-        "django.contrib.admin",
-        "django.contrib.sites",
-        "django.contrib.sitemaps",
-        "django.contrib.staticfiles",
-        "django.contrib.messages",
-        "django.contrib.humanize",
-    )
-
-    #Plugin restrictions
-    CMS_PLACEHOLDER_CONF = {
         # -- Static Placeholders
         # Footer
         "footer": {
@@ -664,6 +583,75 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
             },
         },
     }
+
+    MIDDLEWARE = (
+        "richie.apps.core.cache.LimitBrowserCacheTTLHeaders",
+        "cms.middleware.utils.ApphookReloadMiddleware",
+        "django.middleware.security.SecurityMiddleware",
+        "django.contrib.sessions.middleware.SessionMiddleware",
+        "django.middleware.csrf.CsrfViewMiddleware",
+        "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "django.contrib.messages.middleware.MessageMiddleware",
+        "django.middleware.locale.LocaleMiddleware",
+        "django.middleware.common.CommonMiddleware",
+        "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        "dockerflow.django.middleware.DockerflowMiddleware",
+        "cms.middleware.user.CurrentUserMiddleware",
+        "cms.middleware.page.CurrentPageMiddleware",
+        "cms.middleware.toolbar.ToolbarMiddleware",
+        "cms.middleware.language.LanguageCookieMiddleware",
+        "dj_pagination.middleware.PaginationMiddleware",
+    )
+
+    INSTALLED_APPS = (
+        # Funmooc stuff
+        "base",
+        # Richie stuff
+        "richie.apps.demo",
+        "richie.apps.search",
+        "richie.apps.courses",
+        "richie.apps.core",
+        "richie.plugins.glimpse",
+        "richie.plugins.html_sitemap",
+        "richie.plugins.large_banner",
+        "richie.plugins.nesteditem",
+        "richie.plugins.lti_consumer",
+        "richie.plugins.plain_text",
+        "richie.plugins.section",
+        "richie.plugins.simple_picture",
+        "richie.plugins.simple_text_ckeditor",
+        "richie",
+        # Third party apps
+        "dj_pagination",
+        "dockerflow.django",
+        "parler",
+        "rest_framework",
+        "storages",
+        # Django-cms
+        "djangocms_admin_style",
+        "djangocms_googlemap",
+        "djangocms_link",
+        "djangocms_picture",
+        "djangocms_text_ckeditor",
+        "djangocms_video",
+        "django_check_seo",
+        "cms",
+        "menus",
+        "sekizai",
+        "treebeard",
+        "filer",
+        "easy_thumbnails",
+        # Django
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.admin",
+        "django.contrib.sites",
+        "django.contrib.sitemaps",
+        "django.contrib.staticfiles",
+        "django.contrib.messages",
+        "django.contrib.humanize",
+    )
 
     RICHIE_SIMPLETEXT_CONFIGURATION = [
     ]
