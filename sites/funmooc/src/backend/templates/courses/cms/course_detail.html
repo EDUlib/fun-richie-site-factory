@@ -1,5 +1,5 @@
 {% extends "richie/fullwidth.html" %}
-{% load cms_tags i18n extra_tags pagination_tags static thumbnail %}
+{% load cms_tags i18n extra_tags pagination_tags static thumbnail humanize %}
 
 {% block meta_index_rules %}
     {# Make sure course snapshot pages are not indexed by search engines #}
@@ -10,12 +10,23 @@
     {% endif %}
 {% endblock meta_index_rules %}
 
+{% block meta_rdfa_context %}
+    {% get_placeholder_plugins "course_cover" as plugins or %}
+        {{ block.super }}
+    {% endget_placeholder_plugins %}
+    {% blockplugin plugins.0 %}
+        <meta property="og:type" content="website" />
+        {% thumbnail instance.picture 1200x630 crop upscale subject_location=instance.picture.subject_location as thumb %}
+        <meta property="og:image" content="{{ MEDIA_URL_PREFIX }}{{ thumb.url }}" />
+        <meta property="og:image:width" content="{{ thumb.width }}" />
+        <meta property="og:image:height" content="{{ thumb.height }}" />
+    {% endblockplugin %}
+    {% if not current_page|is_empty_placeholder:"course_introduction" %}
+        <meta property="og:description" content="{% show_placeholder 'course_introduction' current_page %}">
+    {% endif %}
+{% endblock meta_rdfa_context %}
 
-{% block meta_opengraph_contextuals %}
-    <meta property="og:title" content="{{ current_page.get_title|truncatechars:65 }}">
-    <meta property="og:url" content="{{ SITE.web_url }}{{ current_page.get_absolute_url }}">
-{% endblock meta_opengraph_contextuals %}
-
+{% block body_rdfa %} vocab="https://schema.org/" typeof="Course"{% endblock body_rdfa %}
 
 {% block subheader %}
 <div class="subheader subheader--alternative">
@@ -34,14 +45,14 @@
                     <div class="category-badge-list">
                         <div class="category-badge-list__container">
                         {% with category_variant="badge" %}
-                        {% placeholder "course_icons" %}
-                        {% placeholder "course_categories" or %}
-                            {% if current_page.publisher_is_draft and current_page|is_empty_placeholder:"course_icons" %}
-                            <span class="category-badge-list__empty">
-                                {% trans "No associated categories" %}
-                            </span>
-                            {% endif %}
-                        {% endplaceholder %}
+                            {% placeholder "course_icons" %}
+                            {% placeholder "course_categories" or %}
+                                {% if current_page.publisher_is_draft and current_page|is_empty_placeholder:"course_icons" %}
+                                <span class="category-badge-list__empty">
+                                    {% trans "No associated categories" %}
+                                </span>
+                                {% endif %}
+                            {% endplaceholder %}
                         {% endwith %}
                         </div>
                     </div>
@@ -49,11 +60,9 @@
                     {% endblock categories %}
 
                     {% block title %}
-                    <h1 class="subheader__title">
-                        {% render_model current_page "title" %}
-                    </h1>
+                    <h1 class="subheader__title" property="name">{% render_model current_page "title" %}</h1>
                     {% if course.code or current_page.publisher_is_draft %}
-                        <div class="subheader__code">
+                        <div class="subheader__code" property="courseCode" content="{{ course.code|default:'' }}">
                             {% trans "Ref. " %}{% render_model course "code" "code,is_listed" "" "default:'...'" %}
                         </div>
                     {% endif %}
@@ -78,7 +87,9 @@
                                     <svg role="img" class="characteristics__icon" aria-hidden="true">
                                         <use href="#icon-clock" />
                                     </svg>
-                                    <span class="characteristics__term">{% trans "Effort:" %} {{ instance.get_effort_display|default:"NA" }}</span>
+                                    <span class="characteristics__term" property="timeRequired" content="{{ current_page.course.pt_effort }}">
+                                        {% trans "Effort:" %} {{ instance.get_effort_display|default:"NA" }}
+                                    </span>
                                 </li>
                                 {% endif %}
                                 {% if instance.get_pace_display or current_page.publisher_is_draft %}
@@ -96,32 +107,23 @@
                         {% endblock synopsis %}
 
                         {% if current_page.publisher_is_draft or not current_page|is_empty_placeholder:"course_introduction" %}
-                            {% with header_level=3 %}
-                            {% placeholder "course_introduction" or %}
-                                <p>{% trans 'Enter here a introduction of your course.' %}</p>
-                            {% endplaceholder %}
-                            {% endwith %}
+                            <div property="description">{% placeholder "course_introduction" or %}<p>{% trans 'Enter here a introduction of your course.' %}</p>{% endplaceholder %}</div>
                         {% endif %}
                     </div>
 
+                    {% block enrollment_count %}
+                    {% endblock enrollment_count %}
+                    
                     {% block main_organization %}
                     {% with main_organization=course.get_main_organization %}
                         {% if main_organization %}
-                            {% if current_page.publisher_is_draft %}
-                                {% if main_organization.check_publication is True %}
-                                    {% include "courses/cms/fragment_organization_main_logo.html" with organization=main_organization.public_extension %}
-                                {% else %}
-                                    {% include "courses/cms/fragment_organization_main_logo.html" with organization=main_organization %}
-                                {% endif %}
-                            {# If the current page is the published version, show only the organizations that are published #}
-                            {% elif main_organization.check_publication is True %}
-                                {% include "courses/cms/fragment_organization_main_logo.html" with organization=main_organization.public_extension %}
-                            {% endif %}
+                            {% include "courses/cms/fragment_organization_main_logo.html" with organization=main_organization.public_extension %}
                         {% else %}
                             {% include "courses/cms/fragment_organization_main_logo.html" with organization=None %}
                         {% endif %}
                     {% endwith %}
                     {% endblock main_organization %}
+                    
                 </div>
 
                 <div class="subheader__aside">
@@ -147,6 +149,10 @@
 
                         {% endplaceholder %}
                     </div>
+
+                    {% block social_networks %}
+                        {% include "social-networks/course-badges.html" with page_title=request.current_page.get_title page_url=request.current_page.get_absolute_url %}
+                    {% endblock social_networks %}
 
                     {% block contact %}
                     {% endblock contact %}
@@ -184,14 +190,16 @@
                 {% endblock snapshot %}
 
                 {% block cover %}
+                    {% get_placeholder_plugins "course_cover" as cover_plugins %}
+                    <meta property="image" content="{% thumbnail cover_plugins.0.picture 300x170 crop upscale subject_location=cover_plugins.0.picture.subject_location %}" />
                     {% if current_page.publisher_is_draft %}
                     <div class="course-detail__block course-detail__cover">
                         <div class="course-detail__row">
                             <h2 class="course-detail__title">{% trans 'Glimpse cover' %}</h2>
-                            {% get_placeholder_plugins "course_cover" as plugins or %}
-                            <p class="course-detail__empty">{% trans 'Add an image for course cover on its glimpse.' %}</p>
-                            {% endget_placeholder_plugins %}
-                            {% blockplugin plugins.0 %}
+                            {% if not cover_plugins %}
+                                <p class="course-detail__empty">{% trans 'Add an image for course cover on its glimpse.' %}</p>
+                            {% endif %}
+                            {% blockplugin cover_plugins.0 %}
                             <img
                                 src="{% thumbnail instance.picture 300x170 crop upscale subject_location=instance.picture.subject_location %}"
                                 srcset="
@@ -217,7 +225,9 @@
                         {% if current_page.publisher_is_draft or not current_page|is_empty_placeholder:"course_description" %}
                         <div class="course-detail__row course-detail__description">
                             <h2 class="course-detail__title">{% blocktrans context "course_detail__title" %}Description{% endblocktrans %}</h2>
-                            {% placeholder "course_description" %}
+                            <div{% if current_page|is_empty_placeholder:'course_introduction' %} property="description"{% endif %}>
+                                {% placeholder "course_description" %}
+                            </div>
                         </div>
                         {% endif %}
                     {% endblock description %}
@@ -246,7 +256,7 @@
             </div>
 
             {% block runs %}
-                <div class="course-detail__aside">
+                <div class="course-detail__aside" property="isAccessibleForFree" content="true">
                     {% with runs_dict=course.course_runs_dict %}
                         {% block runs_open %}
                             <div class="course-detail__row course-detail__runs course-detail__runs--open">
@@ -264,7 +274,7 @@
 
                         {% block runs_to_be_scheduled %}
                         {% if runs_dict.7 and current_page.publisher_is_draft %}
-                            <div class="course-detail__row course-detail__runs course-detail__runs--inactive">
+                            <div class="course-detail__row course-detail__runs course-detail__runs--to_be_scheduled">
                                 <h3 class="course-detail__title">
                                     {% trans "To be scheduled" context "Course runs to be scheduled (plural)" %}
                                 </h3>
@@ -275,7 +285,7 @@
 
                         {% block runs_upcoming %}
                         {% if runs_dict.3 %}
-                            <div class="course-detail__row course-detail__runs course-detail__runs--inactive">
+                            <div class="course-detail__row course-detail__runs course-detail__runs--upcoming">
                                 <h3 class="course-detail__title">
                                     {% trans "Upcoming" context "Upcoming course runs (plural)" %}
                                 </h3>
@@ -286,7 +296,7 @@
 
                         {% block runs_ongoing %}
                         {% if runs_dict.4 or runs_dict.5 %}
-                            <div class="course-detail__row course-detail__runs course-detail__runs--inactive">
+                            <div class="course-detail__row course-detail__runs course-detail__runs--ongoing">
                                 <h3 class="course-detail__title">
                                     {% trans "Ongoing" context "Ongoing course runs (plural)" %}
                                 </h3>
@@ -297,7 +307,7 @@
 
                         {% block runs_archived %}
                         {% if runs_dict.6 %}
-                            <div class="course-detail__row course-detail__runs course-detail__runs--inactive">
+                            <div class="course-detail__row course-detail__runs course-detail__runs--archived">
                                 <h3 class="course-detail__title">
                                     {% trans "Archived" context "Archived course runs (plural)" %}
                                 </h3>
@@ -305,10 +315,6 @@
                             </div>
                         {% endif %}
                         {% endblock runs_archived %}
-
-                        {% block social_networks %}
-                            {% include "social-networks/course-badges.html" with page_title=request.current_page.get_title page_url=request.current_page.get_absolute_url %}
-                        {% endblock social_networks %}
 
                     {% endwith %}
                 </div>
@@ -319,37 +325,6 @@
 
     {% block fragment_relations %}
     <div class="course-detail__relations">
-        {% block programs %}
-            {% with programs=course.get_programs %}
-                {% if programs %}
-                    {% autopaginate programs GLIMPSE_PAGINATION_PROGRAMS %}
-                    <div id="page{{ page_suffix }}" class="course-detail__programs course-detail__block">
-                        <div class="course-detail__row">
-                            <section class="course-glimpse-list">
-                                <h2 class="course-detail__title">
-                                    {% blocktrans count counter=programs|length %}
-                                        This course is part of a program
-                                    {% plural %}
-                                        This course is part of programs
-                                    {% endblocktrans %}
-                                </h2>
-                                <div class="section__items section__items--programs">
-                                    {% for program in page_obj.object_list %}
-                                        {% if program.extended_object.publisher_is_draft or program.check_publication %}
-                                            {% include "courses/cms/fragment_program_glimpse.html" with program=program %}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                {% if paginator.num_pages > 1 %}
-                                    {% paginate using "richie/pagination.html" %}
-                                {% endif %}
-                            </section>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endwith %}
-        {% endblock programs %}
-
         {% block team %}
             {% if current_page.publisher_is_draft or not current_page|is_empty_placeholder:"course_team" %}
             <div class="course-detail__team course-detail__block course-detail__block--lightest">
@@ -396,7 +371,61 @@
             {% endif %}
         {% endblock organizations %}
 
+        {% block programs %}
+            {% with programs=course.get_programs %}
+                {% if programs %}
+                    {% autopaginate programs GLIMPSE_PAGINATION_PROGRAMS %}
+                    <div id="page{{ page_suffix }}" class="course-detail__programs course-detail__block">
+                        <div class="course-detail__row">
+                            <section class="course-glimpse-list">
+                                <h2 class="course-detail__title">
+                                    {% blocktrans count counter=programs|length %}
+                                        This course is part of a program
+                                    {% plural %}
+                                        This course is part of programs
+                                    {% endblocktrans %}
+                                </h2>
+                                <div class="section__items section__items--programs">
+                                    {% for program in page_obj.object_list %}
+                                        {% include "courses/cms/fragment_program_glimpse.html" with program=program %}
+                                    {% endfor %}
+                                </div>
+                                {% if paginator.num_pages > 1 %}
+                                    {% paginate using "richie/pagination.html" %}
+                                {% endif %}
+                            </section>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endwith %}
+        {% endblock programs %}
+
         {% block licenses %}
+            {% if current_page.publisher_is_draft or not current_page|is_empty_placeholder:"course_license_content" or not current_page|is_empty_placeholder:"course_license_participation" %}
+            <div class="course-detail__license course-detail__block course-detail__block--divider">
+                <section class="course-detail__row">
+                    <h2 class="course-detail__title">{% blocktrans context "course_detail__title" %}License{% endblocktrans %}</h2>
+
+                    <div class="course-detail__item">
+                        <h3 class="course-detail__label">{% trans 'License for the course content' %}</h3>
+                        {% with header_level=4 %}
+                            {% placeholder "course_license_content" page or %}
+                                <p>{% trans 'What is the license for the course content?' %}</p>
+                            {% endplaceholder %}
+                        {% endwith %}
+                    </div>
+
+                    <div class="course-detail__item">
+                        <h3 class="course-detail__label">{% trans 'License for the content created by course participants' %}</h3>
+                        {% with header_level=4 is_license_property=False %}
+                            {% placeholder "course_license_participation" page or %}
+                                <p>{% trans 'What is the license for the content created by course participants?' %}</p>
+                            {% endplaceholder %}
+                        {% endwith %}
+                    </div>
+                </section>
+            </div>
+            {% endif %}
         {% endblock licenses %}
     </div>
     {% endblock fragment_relations %}

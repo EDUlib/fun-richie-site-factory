@@ -6,6 +6,8 @@ $r-subheader-search-title-width: 19rem !default; // aligned on computed search r
 .subheader {
   $subheader-selector: &;
   @include r-scheme-colors(r-theme-val(subheader, base));
+  position: relative;
+  z-index: 100;
 
   // Top level base container to include possible main background and basic
   // spacing
@@ -117,7 +119,7 @@ $r-subheader-search-title-width: 19rem !default; // aligned on computed search r
   // Main subheader container alongside 'aside' container
   &__main {
     @include media-breakpoint-up(lg) {
-      @include sv-flex(1, 0, 60%);
+      @include sv-flex(1, 0, calc(100% - #{$r-course-subheader-aside}));
       display: flex;
       justify-content: flex-start;
       align-content: flex-start;
@@ -135,12 +137,20 @@ $r-subheader-search-title-width: 19rem !default; // aligned on computed search r
     font-size: 1rem;
   }
 
+  &__enrollment-count {
+    @include make-container();
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+
   // Aside subheader container alongside 'main' content
   &__aside {
     text-align: center;
 
     @include media-breakpoint-up(lg) {
-      @include sv-flex(1, 0, 40%);
+      @include sv-flex(1, 0, $r-course-subheader-aside);
       padding: 3rem 1rem;
     }
   }
@@ -152,6 +162,20 @@ $r-subheader-search-title-width: 19rem !default; // aligned on computed search r
 
     @if r-theme-val(subheader, teaser-border) {
       border: 0.25rem solid r-theme-val(subheader, teaser-border);
+    }
+
+    @include media-breakpoint-up(lg) {
+      @include sv-flex(1, 0, 90%);
+    }
+
+    .aspect-ratio {
+      position: relative;
+      padding-bottom: 56.25%; // Aspect ratio 16/9
+
+      iframe {
+        height: 100%;
+        position: absolute;
+      }
     }
 
     iframe,
@@ -166,7 +190,7 @@ $r-subheader-search-title-width: 19rem !default; // aligned on computed search r
   &__cartouche {
     display: block;
     width: 80%;
-    margin: 0.5rem auto;
+    margin: 0 auto;
     color: inherit;
 
     &:hover {
@@ -179,7 +203,7 @@ $r-subheader-search-title-width: 19rem !default; // aligned on computed search r
   &__media {
     display: block;
     width: 100%;
-    max-width: rem-calc(150px);
+    max-width: rem-calc(250px);
     margin: 0 auto;
     background: r-theme-val(subheader, media-background);
     border-radius: $border-radius-lg;

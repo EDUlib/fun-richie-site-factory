@@ -272,7 +272,7 @@
     }
 
     // Specific displays for some buttons
-    &--cta {
+    &--login {
       align-items: center;
 
       a {
@@ -302,8 +302,9 @@
         }
       }
     }
-
-    &--hollow {
+    
+    // Specific displays for some buttons
+    &--register {
       align-items: center;
 
       a {
@@ -316,10 +317,10 @@
         );
         @include font-size($font-size-base);
         justify-content: center;
-        color: r-theme-val(topbar, item-cta-hollow-color);
-        background: r-theme-val(topbar, item-cta-hollow-background);
+        color: r-theme-val(topbar, item-cta-background);
+        background: r-theme-val(topbar, item-cta-color);
         @if r-theme-val(topbar, item-cta-border) {
-          border: $onepixel solid r-theme-val(topbar, item-cta-hollow-border);
+          border: $onepixel solid r-theme-val(topbar, item-cta-border);
         }
 
         @include media-breakpoint-up($r-topbar-breakpoint) {
