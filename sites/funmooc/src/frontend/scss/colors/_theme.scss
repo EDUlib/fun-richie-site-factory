@@ -1,187 +1,5 @@
-///
-/// Color palette and schemes
-///
-
-// Named colors
-// ---------
-$palette: (
-  'black': #090909,
-  'dark-grey': #232323,
-  'charcoal': #29303b,
-  'slate-grey': #686868,
-  'battleship-grey': #686f7a,
-  'light-grey': #d2d2d2,
-  'silver': #d5dbe0,
-  'azure2': #eceff1,
-  'smoke': #fdfdfd,
-  'white': #ffffff,
-  'denim': #0067b7,
-  'firebrick6': #0483bb,
-  'purplish-grey': #726c74,
-  'grey32': #525151,
-  'grey59': #969696,
-  'grey87': #dfdfdf,
-  'indianred3': #04517b,
-  'midnightblue': #141b2c,
-);
-
-// Named gradients
-// ---------
-$neutral-gradient: linear-gradient(
-  to top,
-  r-color('silver') 0,
-  r-color('smoke') 13rem,
-  r-color('white') 14rem,
-  r-color('white')
-);
-$middle-gradient: linear-gradient(285deg, r-color('grey59') 3%, r-color('grey87') 98%);
-$dark-gradient: linear-gradient(285deg, r-color('grey32') 3%, r-color('grey59') 98%);
-$white-mask-gradient: (
-  linear-gradient(
-    to right,
-    r-color('white') 0%,
-    rgba(r-color('white'), 0.85) 15%,
-    rgba(r-color('white'), 0.15) 60%,
-    rgba(r-color('white'), 0) 70%
-  ),
-  linear-gradient(
-    to left,
-    r-color('white') 0%,
-    rgba(r-color('white'), 0.85) 15%,
-    rgba(r-color('white'), 0.15) 60%,
-    rgba(r-color('white'), 0) 70%
-  )
-);
-
-// Basic color schemes
-// ---------
-$purplish-grey-scheme: (
-  font-color: r-color('white'),
-  link-color: r-color('firebrick6'),
-  svg-color: r-color('white'),
-  background: r-color('purplish-grey'),
-  hover-font-color: r-color('white'),
-  hover-background: r-color('purplish-grey'),
-);
-$battleship-grey-scheme: (
-  font-color: r-color('white'),
-  link-color: r-color('firebrick6'),
-  svg-color: r-color('white'),
-  background: r-color('battleship-grey'),
-  hover-font-color: r-color('white'),
-  hover-background: r-color('battleship-grey'),
-);
-$indianred3-scheme: (
-  font-color: r-color('white'),
-  link-color: r-color('light-grey'),
-  svg-color: r-color('white'),
-  background: r-color('indianred3'),
-  hover-font-color: r-color('white'),
-  hover-background: r-color('firebrick6'),
-);
-$firebrick6-scheme: (
-  font-color: r-color('white'),
-  link-color: r-color('light-grey'),
-  svg-color: r-color('white'),
-  background: r-color('firebrick6'),
-  hover-font-color: r-color('white'),
-  hover-background: r-color('indianred3'),
-);
-$white-scheme: (
-  font-color: r-color('black'),
-  h1-color: r-color('black'),
-  h2-color: r-color('black'),
-  svg-color: r-color('black'),
-  background: r-color('white'),
-  hover-font-color: r-color('firebrick6'),
-  hover-background: darken(r-color('white'), 8%),
-);
-$smoke-scheme: (
-  font-color: r-color('firebrick6'),
-  svg-color: r-color('firebrick6'),
-  background: r-color('smoke'),
-  hover-font-color: r-color('indianred3'),
-  hover-background: r-color('white'),
-);
-$light-grey-scheme: (
-  font-color: r-color('black'),
-  h1-color: r-color('black'),
-  h2-color: r-color('black'),
-  svg-color: r-color('black'),
-  background: r-color('light-grey'),
-  hover-font-color: r-color('firebrick6'),
-  hover-background: r-color('battleship-grey'),
-);
-$azure2: (
-  font-color: r-color('black'),
-  h1-color: r-color('black'),
-  h2-color: r-color('black'),
-  svg-color: r-color('black'),
-  background: r-color('azure2'),
-  hover-font-color: r-color('firebrick6'),
-  hover-background: r-color('battleship-grey'),
-);
-$clouds-scheme: (
-  background: bottom left / 100% 70% no-repeat r-color('smoke')
-    url('../../richie/images/components/clouds.jpg'),
-);
-$waves-scheme: (
-  background: top 1vw left 50% / 98% 7vw no-repeat r-color('white')
-    url('../../richie/images/components/waves.svg'),
-);
-$transparent-dark-scheme: (
-  font-color: r-color('black'),
-  h1-color: r-color('black'),
-  h2-color: r-color('black'),
-  link-color: r-color('firebrick6'),
-  svg-color: r-color('black'),
-  background: transparent,
-  border-color: r-color('black'),
-  hover-font-color: r-color('firebrick6'),
-  hover-svg-color: r-color('firebrick6'),
-  hover-border-color: r-color('firebrick6'),
-);
-$neutral-gradient-scheme: (
-  font-color: r-color('black'),
-  link-color: r-color('firebrick6'),
-  svg-color: r-color('black'),
-  background: $neutral-gradient,
-);
-$middle-gradient-scheme: (
-  font-color: r-color('black'),
-  link-color: r-color('black'),
-  svg-color: r-color('black'),
-  background: $middle-gradient,
-  hover-font-color: r-color('black'),
-);
-$dark-gradient-scheme: (
-  font-color: r-color('black'),
-  h1-color: r-color('white'),
-  h2-color: r-color('white'),
-  link-color: r-color('black'),
-  svg-color: r-color('black'),
-  background: $dark-gradient,
-  hover-font-color: r-color('black'),
-);
-$dark-gradient-alt-scheme: map-merge(
-  $dark-gradient-scheme,
-  (
-    font-color: r-color('white'),
-    link-color: r-color('white'),
-    svg-color: r-color('white'),
-    hover-font-color: r-color('white'),
-  )
-);
-$white-mask-gradient-scheme: (
-  font-color: r-color('black'),
-  h1-color: r-color('black'),
-  h2-color: r-color('black'),
-  svg-color: r-color('black'),
-  background: $white-mask-gradient,
-  hover-font-color: r-color('firebrick6'),
-);
-
 // Theme schemes
+
 $r-theme: (
   // Used from styleguide to build available scheme to demonstrate, used to create button variant
   banner:
@@ -215,11 +33,11 @@ $r-theme: (
     white-mask-gradient: $white-mask-gradient,
   ),
   cookie-consent: (
-    base-background: r-color('darkish-blue'),
-    cta-allow: r-color('ocean-blue'),
-    cta-deny: r-color('indianred3'),
+    base-background: r-color('midnightblue'),
+    cta-allow: r-color('firebrick6'),
+    cta-deny: r-color('purplish-grey'),
     light-color: r-color('white'),
-    dark-color: r-color('dark'),
+    dark-color: r-color('dark-grey'),
   ),
   topbar: (
     base-background: r-color('white'),
@@ -389,8 +207,10 @@ $r-theme: (
     title-color: r-color('black'),
     organization-media-empty-background: r-color('smoke'),
     organization-color: r-color('firebrick6'),
+    code-color: r-color('battleship-grey'),
     svg-icon-fill: r-color('white'),
     footer: $battleship-grey-scheme,
+    organization-shadow: 0 0 6px r-color('light-grey'),
   ),
   category-badges: (
     primary-item: $indianred3-scheme,
@@ -413,8 +233,8 @@ $r-theme: (
     input-color-error: r-color('firebrick6'),
     input-border: r-color('grey32'),
     input-border-error: r-color('firebrick6'),
-    input-border-focus: r-color('turquoise-blue'),
-    input-outline: rgba(r-color('turquoise-blue'), 0.5),
+    input-border-focus: r-color('denim'),
+    input-outline: rgba(r-color('denim'), 0.5),
     input-checked-background: r-color('firebrick6'),
     input-unchecked-background: transparent,
     input-unchecked-border: r-color('grey32'),
@@ -535,10 +355,10 @@ $r-theme: (
     plan-title-color: r-color('firebrick6'),
     license-label-color: r-color('denim'),
     checkmark-list-decoration: url('../../richie/images/components/checkmark.svg'),
-    view-more-runs-color: r-color('lipstick'),
+    view-more-runs-color: r-color('firebrick6'),
     run-catalog-visibility-hidden-logo: url('../../richie/images/catalog_visibility/hidden.svg'),
     run-catalog-visibility-course-only-logo: url('../../richie/images/catalog_visibility/course_only.svg'),
-    run-catalog-visibility-logo-color: r-color('ocean-blue'),
+    run-catalog-visibility-logo-color: r-color('denim'),
   ),
   organization-detail: (
     banner-empty-background: r-color('smoke'),
@@ -568,23 +388,19 @@ $r-theme: (
   ),
   search-filters-group: (
     title-color: r-color('battleship-grey'),
+    modal-overlay-background: r-color('white'),
   ),
-  search-filters-group-modal: (
-    base-color: r-color('slate-grey'),
+  modal: (
     base-background: r-color('white'),
     base-border: r-color('slate-grey'),
-    input-color: r-color('black'),
-    input-background: r-color('light-grey'),
-    item-border: r-color('light-grey'),
-    close-color: r-color('black'),
-    close-border: r-color('light-grey'),
-    close-background: r-color('white'),
-    button-color: r-color('white'),
-    button-background: r-color('firebrick6'),
+    base-color: r-color('slate-grey'),
+    close-background: transparent,
+    close-border: null,
+    close-color: r-color('slate-grey'),
     overlay-background: rgba(r-color('black'), 0.75),
   ),
   search-filters-group-modal: (
-    button-background: r-color('lipstick'),
+    button-background: r-color('firebrick6'),
     button-color: r-color('white'),
     close-background: r-color('white'),
     close-border: r-color('light-grey'),
@@ -618,7 +434,12 @@ $r-theme: (
     hover-color: r-color('charcoal'),
     base-border: r-color('light-grey'),
   ),
+  shadowed-box: (
+    base-background: r-color('white'),
+    base-shadow: 0 2px 4px rgba(5, 18, 42, 0.19),
+  ),
   spinner: (
     base-color: r-color('denim'),
+    base-color-light: r-color('white'),
   )
-);
+)
