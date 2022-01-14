@@ -63,9 +63,6 @@ services:
       - "8000:8000"
     volumes:
       - ./data/media/${RICHIE_SITE:-funmooc}:/data/media
-    depends_on:
-      - "db"
-      - "elasticsearch"
     user: ${DOCKER_USER:-1000}
 
   nginx:
