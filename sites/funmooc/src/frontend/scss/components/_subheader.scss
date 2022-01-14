@@ -164,13 +164,13 @@ $r-subheader-search-title-width: 19rem !default; // aligned on computed search r
       border: 0.25rem solid r-theme-val(subheader, teaser-border);
     }
 
-    @include media-breakpoint-up(lg) {
-      @include sv-flex(1, 0, 90%);
-    }
+    //@include media-breakpoint-up(lg) {
+    //  @include sv-flex(1, 0, 90%);
+    //}
 
     .aspect-ratio {
-      position: relative;
-      padding-bottom: 56.25%; // Aspect ratio 16/9
+      //position: relative;
+      //padding-bottom: 56.25%; // Aspect ratio 16/9
 
       iframe {
         height: 100%;
