@@ -97,13 +97,13 @@ msgstr "Votre navigateur ne supporte pas ce format de vidéo."
 
 #: apps/core/templates/menu/breadcrumbs.html:4
 msgid "You are here:"
-msgstr "Vous êtes ici:"
+msgstr "Vous êtes ici :"
 
 #: apps/core/templates/richie/base.html:96
 #: apps/courses/templates/courses/cms/course_detail.html:156
 #: apps/core/templates/menu/language_menu.html:5
 msgid "Language:"
-msgstr "Langue:"
+msgstr "Langue :"
 
 #: apps/core/templates/menu/language_menu.html:11
 #, python-format
@@ -812,7 +812,7 @@ msgstr "Bio adaptée"
 
 #: apps/courses/models/person.py:80
 msgid "Optional: provide a custom bio (if you leave it empty, it will display the person's bio)."
-msgstr "Optionnel: adaptez la bio (si vous laissez le champs vide, la biographie par défaut de la personne s'affichera)."
+msgstr "Optionnel : adaptez la bio (si vous laissez le champs vide, la biographie par défaut de la personne s'affichera)."
 
 #: apps/courses/models/person.py:87
 msgid "person plugin"
@@ -1194,7 +1194,7 @@ msgstr "Effort :"
 
 #: apps/courses/templates/courses/cms/course_detail.html:89
 msgid "Pace:"
-msgstr "Rythme:"
+msgstr "Rythme :"
 
 #: apps/courses/templates/courses/cms/course_detail.html:101
 msgid "Enter here a introduction of your course."
