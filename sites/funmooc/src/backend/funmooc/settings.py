@@ -227,67 +227,12 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
 
     # AUTHENTICATION
     RICHIE_AUTHENTICATION_DELEGATION = {
-        "BASE_URL": values.Value(
-            "", environ_name="AUTHENTICATION_BASE_URL", environ_prefix=None
-        ),
-        "BACKEND": values.Value(
-            "openedx-dogwood",
-            environ_name="AUTHENTICATION_BACKEND",
-            environ_prefix=None,
-        ),
-        # PROFILE_URLS are custom links to access to Auth profile views
-        # from Richie. Link order will reflect the order of display in frontend.
-        # (i) Info - {base_url} is AUTHENTICATION_DELEGATION.BASE_URL
-        # (i) If you need to bind user data into href url, wrap the property between ()
-        # e.g: for user.username = johndoe, /u/(username) will be /u/johndoe
-        "PROFILE_URLS": values.DictValue(
-            {
-                "dashboard": {
-                    "label": _("Dashboard"),
-                    "href": _("{base_url:s}/dashboard"),
-                },
-                "profile": {
-                    "label": _("Profile"),
-                    "href": _("{base_url:s}/u/(username)"),
-                },
-                "account": {
-                    "label": _("Account"),
-                    "href": _("{base_url:s}/account/settings"),
-                },
-            },
-            environ_name="AUTHENTICATION_PROFILE_URLS",
-            environ_prefix=None,
-        ),
     }
 
     # LMS
     RICHIE_LMS_BACKENDS = [
-        {
-            "BACKEND": values.Value(
-                "richie.apps.courses.lms.edx.EdXLMSBackend",
-                environ_name="EDX_BACKEND",
-                environ_prefix=None,
-            ),
-            "JS_BACKEND": values.Value(
-                "openedx-dogwood",
-                environ_name="EDX_JS_BACKEND",
-                environ_prefix=None,
-            ),
-            "COURSE_REGEX": values.Value(
-                r"^.*/courses/(?P<course_id>.*)/info/?$",
-                environ_name="EDX_COURSE_REGEX",
-                environ_prefix=None,
-            ),
-            # Synchronization
-            "COURSE_RUN_SYNC_NO_UPDATE_FIELDS": ["languages"],
-            "JS_COURSE_REGEX": values.Value(
-                r"^.*/courses/(.*)/info/?$",
-                environ_name="EDX_JS_COURSE_REGEX",
-                environ_prefix=None,
-            ),
-            "BASE_URL": values.Value(environ_name="EDX_BASE_URL", environ_prefix=None),
-        }
     ]
+
     RICHIE_COURSE_RUN_SYNC_SECRETS = values.ListValue([])
 
     # CMS
@@ -307,28 +252,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
     as a LMS BACKEND.
     """
     JOANIE_BACKEND = {
-        "BASE_URL": values.Value(environ_name="JOANIE_BASE_URL", environ_prefix=None),
-        "BACKEND": values.Value(
-            "richie.apps.courses.lms.joanie.JoanieBackend",
-            environ_name="JOANIE_BACKEND",
-            environ_prefix=None,
-        ),
-        "JS_BACKEND": values.Value(
-            "joanie", environ_name="JOANIE_JS_BACKEND", environ_prefix=None
-        ),
-        "COURSE_REGEX": values.Value(
-            r"^.*/api/v1.0/(?P<resource_type>(course-runs|products))/(?P<resource_id>[^/]*)/?$",
-            environ_name="JOANIE_COURSE_REGEX",
-            environ_prefix=None,
-        ),
-        "JS_COURSE_REGEX": values.Value(
-            r"^.*/api/v1.0/(course-runs|products)/([^/]*)/?$",
-            environ_name="JOANIE_JS_COURSE_REGEX",
-            environ_prefix=None,
-        ),
-        # Course runs synchronization
-        "COURSE_RUN_SYNC_NO_UPDATE_FIELDS": [],
-        "DEFAULT_COURSE_RUN_SYNC_MODE": "sync_to_public",
     }
 
     # Internationalization
@@ -357,7 +280,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                     "django.template.context_processors.static",
                     "cms.context_processors.cms_settings",
                     "richie.apps.core.context_processors.site_metas",
-                    "base.context_processors.site_metas",
                 ],
                 "loaders": [
                     "django.template.loaders.filesystem.Loader",
@@ -366,15 +288,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
             },
         }
     ]
-
-    # Placeholders
-    CMS_PLACEHOLDER_CONF_OVERRIDES = {
-        "courses/cms/course_detail.html course_teaser": {
-            "name": _("Teaser"),
-            "plugins": ["LTIConsumerPlugin"],
-            "limits": {"LTIConsumerPlugin": 1},
-        },
-    }
 
     MIDDLEWARE = (
         "richie.apps.core.cache.LimitBrowserCacheTTLHeaders",
@@ -395,6 +308,7 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
         "dj_pagination.middleware.PaginationMiddleware",
     )
 
+    # Django applications from the highest priority to the lowest
     INSTALLED_APPS = (
         # Funmooc stuff
         "base",
@@ -448,29 +362,88 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
         "django.contrib.humanize",
     )
 
-    # Search
-    RICHIE_FILTERS_CONFIGURATION = {
-        "new": {
-            "class": "richie.apps.search.filter_definitions.StaticChoicesFilterDefinition",
-            "params": {
-                "fragment_map": {"new": [{"term": {"is_new": True}}]},
-                "human_name": _("New courses"),
-                "min_doc_count": 0,
-                "values": {"new": _("New courses")},
+    #Plugin restrictions
+    CMS_PLACEHOLDER_CONF_OVERRIDES = {
+        # Course detail
+        "courses/cms/course_detail.html course_introduction": {
+            "name": _("Catch phrase"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        "courses/cms/course_detail.html course_teaser": {
+                "name": _("Teaser"),
+                "plugins": ["VideoPlayerPlugin", "SimplePicturePlugin"],
+                "limits": {"VideoPlayerPlugin": 1, "SimplePicturePlugin": 1},
+        },
+        "courses/cms/course_detail.html course_information": {
+            "name": _("Complementary information"),
+            "plugins": ["SectionPlugin"],
+            "parent_classes": {
+                "CKEditorPlugin": ["SectionPlugin"],
+                "SimplePicturePlugin": ["SectionPlugin"],
+                "GlimpsePlugin": ["SectionPlugin"],
+                "NestedItemPlugin":["SectionPlugin"],
+            },
+            "child_classes": {
+                "SectionPlugin": ["CKEditorPlugin", "SimplePicturePlugin", "GlimpsePlugin","NestedItemPlugin"]
             },
         },
+        "courses/cms/course_detail.html course_more_information": {
+            "name": _("Complementary information"),
+            "plugins": ["SectionPlugin"],
+            "parent_classes": {
+                "CKEditorPlugin": ["SectionPlugin"],
+                "SimplePicturePlugin": ["SectionPlugin"],
+                "GlimpsePlugin": ["SectionPlugin"],
+                "NestedItemPlugin":["SectionPlugin"],
+            },
+            "child_classes": {
+                "SectionPlugin": ["CKEditorPlugin", "SimplePicturePlugin", "GlimpsePlugin","NestedItemPlugin"]
+            },
+        },
+        # Organization detail
+        "courses/cms/organization_detail.html excerpt": {
+            "name": _("Excerpt"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        # Person detail
+        "courses/cms/person_detail.html bio": {
+            "name": _("Bio"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        # Blog page detail
+        "courses/cms/blogpost_detail.html excerpt": {
+            "name": _("Excerpt"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+        # Program page detail
+        "courses/cms/program_detail.html program_excerpt": {
+            "name": _("Excerpt"),
+            "plugins": ["CKEditorPlugin"],
+            "limits": {"CKEditorPlugin": 1},
+        },
+    }
+
+    RICHIE_SIMPLETEXT_CONFIGURATION = [
+    ]
+
+    #Search
+    RICHIE_FILTERS_CONFIGURATION = {
         "course_runs": {
             "class": "richie.apps.search.filter_definitions.NestingWrapper",
             "params": {"filters": COURSE_RUN_FILTERS},
         },
-        "types": {
+        "host": {
             "class": "richie.apps.search.filter_definitions.IndexableHierarchicalFilterDefinition",
             "params": {
-                "human_name": _("Types"),
+                "human_name": _("Host"),
                 "is_autocompletable": True,
                 "is_searchable": True,
                 "min_doc_count": 0,
-                "reverse_id": "types",
+                "reverse_id": "host",
                 "term": "categories",
             },
         },
@@ -485,14 +458,14 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                 "term": "categories",
             },
         },
-        "collections": {
+        "certificate": {
             "class": "richie.apps.search.filter_definitions.IndexableHierarchicalFilterDefinition",
             "params": {
-                "human_name": _("Collections"),
+                "human_name": _("Certificate"),
                 "is_autocompletable": True,
                 "is_searchable": True,
                 "min_doc_count": 0,
-                "reverse_id": "collections",
+                "reverse_id": "certificate",
                 "term": "categories",
             },
         },
@@ -510,7 +483,7 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
         "persons": {
             "class": "richie.apps.search.filter_definitions.IndexableFilterDefinition",
             "params": {
-                "human_name": _("Contributors"),
+                "human_name": _("Persons"),
                 "is_autocompletable": True,
                 "is_searchable": True,
                 "min_doc_count": 0,
@@ -518,49 +491,16 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                 "term": "persons",
             },
         },
-        "licences": {
-            "class": "richie.apps.search.filter_definitions.IndexableFilterDefinition",
-            "params": {
-                "human_name": _("Licences"),
-                "is_autocompletable": True,
-                "is_searchable": True,
-                "min_doc_count": 0,
-            },
-        },
-        "pace": {
-            "class": "richie.apps.search.filter_definitions.StaticChoicesFilterDefinition",
-            "params": {
-                "fragment_map": {
-                    "self-paced": [
-                        {"bool": {"must_not": {"exists": {"field": "pace"}}}}
-                    ],
-                    "lt-1h": [{"range": {"pace": {"lt": 60}}}],
-                    "1h-2h": [{"range": {"pace": {"gte": 60, "lte": 120}}}],
-                    "gt-2h": [{"range": {"pace": {"gt": 120}}}],
-                },
-                "human_name": _("Weekly pace"),
-                "min_doc_count": 0,
-                "sorting": "conf",
-                "values": {
-                    "self-paced": _("Self-paced"),
-                    "lt-1h": _("Less than one hour"),
-                    "1h-2h": _("One to two hours"),
-                    "gt-2h": _("More than two hours"),
-                },
-            },
-        },
     }
+
     RICHIE_FILTERS_PRESENTATION = [
-        "new",
         "availability",
-        "languages",
-        "types",
         "subjects",
-        "collections",
+        "languages",
         "organizations",
+        "host",
+        "certificate",
         "persons",
-        "licences",
-        "pace",
     ]
 
     # Languages
@@ -571,7 +511,7 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
     # fallback/default languages throughout the app.
     # Use "en" as default as it is the language that is most likely to be spoken by any visitor
     # when their preferred language, whatever it is, is unavailable
-    LANGUAGES = (("en", _("English")), ("fr", _("French")))
+    LANGUAGES = (("fr", _("French")), ("en", _("English")))
 
     # - Django CMS
     CMS_LANGUAGES = {
@@ -787,14 +727,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
         """
         return f"cms_{get_release():s}_"
 
-    # pylint: disable=invalid-name
-    @property
-    def ALL_LANGUAGES(self):
-        """Add extra languages for course runs"""
-        return [(language, _(name)) for language, name in global_settings.LANGUAGES] + [
-            ("ps", _("Pashto"))
-        ]
-
     @classmethod
     def post_setup(cls):
         """Post setup configuration.
@@ -813,10 +745,6 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
             )
             with sentry_sdk.configure_scope() as scope:
                 scope.set_extra("application", "backend")
-
-        # If a Joanie Backend has been configured, we add it into LMS_BACKENDS dict
-        if cls.JOANIE_BACKEND.get("BASE_URL") is not None:
-            cls.RICHIE_LMS_BACKENDS.append(cls.JOANIE_BACKEND)
 
         # Customize DjangoCMS placeholders configuration
         cls.CMS_PLACEHOLDER_CONF = merge_dict(
@@ -839,36 +767,7 @@ class Development(Base):
     # Django Check SEO
     DJANGO_CHECK_SEO_FORCE_HTTP = True
 
-    # Note: This override can be simplified once a merge update is added in richie for PAGES_INFO
-    RICHIE_DEMO_PAGES_INFO = {
-        "annex": {
-            "title": {"en": "Annex", "fr": "Annexe"},
-            "in_navigation": False,
-            "template": "richie/single_column.html",
-            "children": {
-                "annex__about": {
-                    "title": {"en": "About", "fr": "A propos"},
-                    "in_navigation": True,
-                    "template": "richie/single_column.html",
-                },
-                "annex__sitemap": {
-                    "title": {"en": "Sitemap", "fr": "Plan de site"},
-                    "in_navigation": True,
-                    "template": "richie/single_column.html",
-                },
-                "help": {
-                    "title": {"en": "Help", "fr": "Aide"},
-                    "in_navigation": True,
-                    "template": "richie/single_column.html",
-                },
-                "login-error": {
-                    "title": {"en": "Login error", "fr": "Erreur de connexion"},
-                    "in_navigation": False,
-                    "template": "richie/single_column.html",
-                },
-            },
-        },
-    }
+    RICHIE_DEMO_NB_OBJECTS = {"licences": 0}
 
 
 class Test(Base):

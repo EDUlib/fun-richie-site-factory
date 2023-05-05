@@ -59,6 +59,7 @@ bootstrap:  ## install development dependencies
 build: ## build all containers
 	$(COMPOSE) build app
 	$(COMPOSE) build nginx
+	$(COMPOSE) build ecsnginx
 	$(COMPOSE) build app-dev
 .PHONY: build
 
@@ -77,8 +78,6 @@ logs: ## display app logs (follow mode)
 .PHONY: logs
 
 run: ## start the wsgi (production) or development server
-	@$(COMPOSE) up -V -d redis-sentinel
-	@$(WAIT_SENTINEL)
 	@$(COMPOSE) up -d nginx
 	@$(COMPOSE) up -d app-dev
 	@$(WAIT_DB)
