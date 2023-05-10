@@ -1,34 +1,32 @@
 {% load i18n static %}{% spaceless %}
     <a
-        href="https://www.facebook.com/france.universite.numerique/"
+        href="https://www.facebook.com/EDUlib.org/"
         class="body-footer__badge"
-        target="_blank"
+        target="_blank" rel="noopener noreferrer"
     >
-        <svg role="img">
+        <svg role="img" aria-label="{% trans "Facebook" %}">
             <title>{% trans "Facebook" %}</title>
-            <use xlink:href="#icon-facebook" />
+            <use href="#icon-facebook" />
         </svg>
     </a>
     <a
-        href="https://twitter.com/FunMooc"
+        href="https://twitter.com/EDUlib_ORG"
         class="body-footer__badge"
-        target="_blank"
-        title="{% trans "Twitter page" %}"
+        target="_blank" rel="noopener noreferrer"
     >
-        <svg role="img">
-            <title>{% trans "Twitter" %}</title>
-            <use xlink:href="#icon-twitter" />
+        <svg role="img" aria-label="{% trans "Twitter page" %}">
+            <title>{% trans "Twitter page" %}</title>
+            <use href="#icon-twitter" />
         </svg>
     </a>
-   <a
-        href="https://www.linkedin.com/school/franceuniversitenumerique/"
+    <a
+        href="https://www.linkedin.com/school/edulibmooc/"
         class="body-footer__badge"
-        target="_blank"
-        title="{% trans "Linkedin" %}"
+        target="_blank" rel="noopener noreferrer"
     >
-        <svg role="img">
-            <title>{% trans "Linkedin" %}</title>
-            <use xlink:href="#icon-linkedin" />
+        <svg role="img" aria-label="{% trans "Linkedin page" %}">
+            <title>{% trans "Linkedin page" %}</title>
+            <use href="#icon-linkedin" />
         </svg>
     </a>
 {% endspaceless %}

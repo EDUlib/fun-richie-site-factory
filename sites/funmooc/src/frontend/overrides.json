@@ -1,5 +1,3 @@
 {
-  "overrides": {
-    "api/web-analytics/index.ts": "../../../../../js/api/web-analytics/index.ts"
-  }
+  "overrides": {}
 }

@@ -1,0 +1,9 @@
+{% extends "richie/homepage.html" %}
+{% load cms_tags %}
+
+{% block topbar_classes %}{% endblock topbar_classes %}
+
+{% comment %}Enable search field in topbar{% endcomment %}
+{% block topbar_searchbar %}
+<div class="topbar__search richie-react richie-react--root-search-suggest-field" data-props='{"courseSearchPageUrl": "{% page_url 'courses' %}"}'></div>
+{% endblock topbar_searchbar %}

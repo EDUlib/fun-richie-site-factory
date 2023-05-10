@@ -6,41 +6,41 @@
         <a
             href="https://www.facebook.com/share.php?u={{ full_page_url }}"
             class="social-network-badges__item"
-            target="_blank" rel="noopener noreferrer"
+            target="_blank"
+            title="{% trans "Share on Facebook" %}"
         >
-            <svg role="img" aria-label="{% trans "Share on Facebook" %}">
-                <title>{% trans "Share on Facebook" %}</title>
-                <use href="#icon-facebook" />
+            <svg role="img">
+                <use xlink:href="#icon-facebook" />
             </svg>
         </a>
         <a
             href="https://twitter.com/intent/tweet?text={{ shared_sentence|urlencode }}"
             class="social-network-badges__item"
-            target="_blank" rel="noopener noreferrer"
+            target="_blank"
+            title="{% trans "Share on Twitter" %}"
         >
-            <svg role="img" aria-label="{% trans "Share on Twitter" %}">
-                <title>{% trans "Share on Twitter" %}</title>
-                <use href="#icon-twitter" />
+            <svg role="img">
+                <use xlink:href="#icon-twitter" />
             </svg>
         </a>
         <a
             href="https://www.linkedin.com/sharing/share-offsite/?url={{ full_page_url }}"
             class="social-network-badges__item"
-            target="_blank" rel="noopener noreferrer"
+            target="_blank"
+            title="{% trans "Share on Linkedin" %}"
         >
-            <svg role="img" aria-label="{% trans "Share on Linkedin" %}">
-                <title>{% trans "Share on Linkedin" %}</title>
-                <use href="#icon-linkedin" />
+            <svg role="img">
+                <use xlink:href="#icon-linkedin" />
             </svg>
         </a>
         <a
             href="mailto:?subject={{ shared_subject|urlencode }}&amp;body={{ shared_sentence|urlencode }}"
             class="social-network-badges__item"
-            target="_blank" rel="noopener noreferrer"
+            target="_blank"
+            title="{% trans "Share by Email" %}"
         >
-            <svg role="img" aria-label="{% trans "Share by Email" %}">
-                <title>{% trans "Share by Email" %}</title>
-                <use href="#icon-envelope" />
+            <svg role="img">
+                <use xlink:href="#icon-envelope" />
             </svg>
         </a>
   </div>
