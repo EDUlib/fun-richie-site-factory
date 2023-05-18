@@ -39,6 +39,7 @@
     "tarteaucitronjs": "1.11.0"
   },
   "devDependencies": {
+    "file-loader": "6.2.0",
     "@formatjs/cli": "6.1.0",
     "babel-loader": "9.1.2",
     "eslint": "8.39.0",
