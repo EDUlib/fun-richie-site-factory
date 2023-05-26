@@ -1,26 +1,26 @@
 // Basic color schemes
 // ---------
-$lipstick-scheme: (
+$edulib-dark-scheme: (
   font-color: r-color('white'),
   link-color: r-color('white'),
   svg-color: r-color('white'),
-  background: r-color('lipstick'),
+  background: r-color('edulib-dark'),
   hover-font-color: r-color('white'),
-  hover-background: scale-color(r-color('lipstick'), $lightness: -10%),
+  hover-background: scale-color(r-color('edulib-dark'), $lightness: -10%),
 );
 $active-scheme: (
-  font-color: r-color('lipstick'),
-  svg-color: r-color('lipstick'),
+  font-color: r-color('edulib-dark'),
+  svg-color: r-color('edulib-dark'),
   background: transparent,
-  hover-font-color: r-color('indianred3'),
+  hover-font-color: r-color('edulib-light'),
 );
-$indianred3-scheme: (
+$edulib-light-scheme: (
   font-color: r-color('white'),
   link-color: r-color('light-grey'),
   svg-color: r-color('white'),
-  background: r-color('indianred3'),
+  background: r-color('edulib-light'),
   hover-font-color: r-color('white'),
-  hover-background: r-color('lipstick'),
+  hover-background: r-color('edulib-dark'),
 );
 $darkish-blue-scheme: (
   font-color: r-color('white'),
@@ -32,7 +32,7 @@ $darkish-blue-scheme: (
 );
 $ocean-blue-scheme: (
   font-color: r-color('white'),
-  link-color: r-color('lipstick'),
+  link-color: r-color('edulib-dark'),
   svg-color: r-color('white'),
   background: r-color('ocean-blue'),
   hover-font-color: r-color('white'),
@@ -51,7 +51,7 @@ $white-scheme: (
   h2-color: r-color('black-two'),
   svg-color: r-color('black'),
   background: r-color('white'),
-  hover-font-color: r-color('lipstick'),
+  hover-font-color: r-color('edulib-light'),
   hover-background: darken(r-color('white'), 8%),
 );
 $light-scheme: (
@@ -60,7 +60,7 @@ $light-scheme: (
   h2-color: r-color('black-two'),
   svg-color: r-color('black'),
   background: r-color('light-grey'),
-  hover-font-color: r-color('lipstick'),
+  hover-font-color: r-color('edulib-light'),
   hover-background: r-color('battleship-grey'),
 );
 $lightest-scheme: (
@@ -69,7 +69,7 @@ $lightest-scheme: (
   h2-color: r-color('black-two'),
   svg-color: r-color('black'),
   background: r-color('pale-grey'),
-  hover-font-color: r-color('lipstick'),
+  hover-font-color: r-color('edulib-dark'),
   hover-background: r-color('battleship-grey'),
 );
 $clouds-scheme: (
@@ -92,9 +92,9 @@ $transparent-darkest-scheme: (
   svg-color: r-color('black'),
   background: transparent,
   border-color: r-color('black'),
-  hover-font-color: r-color('lipstick'),
-  hover-svg-color: r-color('lipstick'),
-  hover-border-color: r-color('lipstick'),
+  hover-font-color: r-color('edulib-dark'),
+  hover-svg-color: r-color('edulib-dark'),
+  hover-border-color: r-color('edulib-dark'),
 );
 $neutral-gradient-scheme: (
   font-color: r-color('black-two'),
@@ -124,15 +124,15 @@ $white-mask-gradient-scheme: (
   h2-color: r-color('black'),
   svg-color: r-color('black'),
   background: $white-mask-gradient,
-  hover-font-color: r-color('lipstick'),
+  hover-font-color: r-color('edulib-dark'),
 );
 $clear-red-scheme: (
-  font-color: r-color('lipstick'),
-  h1-color: r-color('lipstick'),
-  h2-color: r-color('lipstick'),
-  svg-color: r-color('lipstick'),
+  font-color: r-color('edulib-dark'),
+  h1-color: r-color('edulib-dark'),
+  h2-color: r-color('edulib-dark'),
+  svg-color: r-color('edulib-dark'),
   background: r-color('white'),
-  hover-font-color: r-color('lipstick'),
+  hover-font-color: r-color('edulib-dark'),
 );
 $clear-blue-scheme: (
   font-color: r-color('ocean-blue'),

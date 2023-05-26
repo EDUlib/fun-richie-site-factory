@@ -67,8 +67,8 @@ class StyleguideMixin:
             "turquoise-blue",
             "robin-egg-blue",
             "mediumturquoise",
-            "lipstick",
-            "indianred3",
+            "edulib-dark",
+            "edulib-light",
         ],
         # Available gradient background
         "gradient_colors": [
@@ -86,7 +86,7 @@ class StyleguideMixin:
             "clear",
             "light",
             "lightest",
-            "indianred3",
+            "edulib-light",
             "clear-red",
             "neutral-gradient",
             "light-gradient",
