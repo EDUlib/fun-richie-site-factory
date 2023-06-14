@@ -2015,3 +2015,11 @@ msgstr "Hébergeur"
 #: apps/search/defaults.py
 msgid "Certificate"
 msgstr "Attestation"
+
+#: apps/search/defaults.py
+msgid "Accessibility"
+msgstr "Accessibilité"
+
+#: apps/core/templates/richie/base.html
+msgid "Dashboard"
+msgstr "Tableau de bord"
