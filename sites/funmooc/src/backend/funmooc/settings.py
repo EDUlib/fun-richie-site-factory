@@ -480,15 +480,15 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
                 "term": "organizations",
             },
         },
-        "persons": {
-            "class": "richie.apps.search.filter_definitions.IndexableFilterDefinition",
+        "accessibility": {
+            "class": "richie.apps.search.filter_definitions.IndexableHierarchicalFilterDefinition",
             "params": {
-                "human_name": _("Persons"),
+                "human_name": _("Accessibility"),
                 "is_autocompletable": True,
                 "is_searchable": True,
                 "min_doc_count": 0,
-                "reverse_id": "persons",
-                "term": "persons",
+                "reverse_id": "accessibility",
+                "term": "categories",
             },
         },
     }
@@ -500,7 +500,7 @@ class Base(StyleguideMixin, DRFMixin, RichieCoursesConfigurationMixin, Configura
         "organizations",
         "host",
         "certificate",
-        "persons",
+        "accessibility",
     ]
 
     # Languages
