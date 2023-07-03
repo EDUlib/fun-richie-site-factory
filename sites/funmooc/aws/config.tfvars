@@ -1,7 +1,7 @@
 site = "funmooc"
 
 app_domain = {
-  production = "test-catalogue.edulib.org"
-  preprod = "test-catalogue.edulib.org"
-  staging = "test-catalogue.edulib.org"
+  production = "catalogue.edulib.org"
+  preprod = "catalogue.edulib.org"
+  staging = "catalogue.edulib.org"
 }
