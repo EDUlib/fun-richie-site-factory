@@ -1528,6 +1528,15 @@ msgstr "\n"
 "                                %(title)s, du %(start)s au %(end)s\n"
 "                            "
 
+#: apps/courses/templates/courses/cms/fragment_course_runs_list.html:14
+#, python-format
+msgid "\n"
+"                                %(title)s, enrollment from %(start)s to %(end)s\n"
+"                            "
+msgstr "\n"
+"                                %(title)s, inscription du %(start)s au %(end)s\n"
+"                            "
+
 #: apps/courses/templates/courses/cms/fragment_course_runs_list.html:18
 #, python-format
 msgid "\n"
@@ -1535,6 +1544,15 @@ msgid "\n"
 "                            "
 msgstr "\n"
 "                                Du %(start)s au %(end)s\n"
+"                            "
+
+#: apps/courses/templates/courses/cms/fragment_course_runs_list.html:18
+#, python-format
+msgid "\n"
+"                                Enrollment from %(start)s to %(end)s\n"
+"                            "
+msgstr "\n"
+"                                Inscription du %(start)s au %(end)s\n"
 "                            "
 
 #: apps/courses/templates/courses/cms/fragment_course_runs_list.html:32
